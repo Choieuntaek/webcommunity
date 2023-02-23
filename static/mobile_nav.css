@@ -1,0 +1,30 @@
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-shadow: 0 4px 2px -2px rgb(0 0 0 / 20%);
+    height: 45px;
+    /* border-bottom: solid 1px #D0CFCE; */
+    background-color: white;
+    border-bottom: solid 1px #D0CFCE;
+}
+
+.logo{
+    width:80px;
+}
+
+.right_info{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.right_info a {
+    margin-right:3px;
+    padding:5px 5px;
+    background-color: rgba(0 0 188);
+    border-radius: 5px;
+    color: white;
+}
+

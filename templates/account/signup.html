@@ -1,0 +1,127 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'mobile_login.css'%}">
+
+<div class="main_page">
+    <a href="{% url 'resell:main' %}">홈으로</a>
+</div>
+
+<div class="login_inner">
+    <div class="title">
+        <h1>회원가입</h1>
+    </div>
+
+    <p>이미 계정이 있거나 소셜 로그인을 하려면 <a class="login_url" href="{{ login_url }}">로그인</a> 해주세요.
+    </p>
+
+    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+        <div class="input_box">
+            <input class="input_item" type="email" name="email" placeholder="이메일 주소" autocomplete="email" required=""
+                   id="id_email" value="{{ form.email.value|default_if_none:'' }}">
+
+
+            <div class="error">
+                {% if form.email.errors %}
+                <ul>
+                    {% for error in form.email.errors %}
+                    <li>
+                        <span> {{ error }} </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <input class="input_item" type="text" name="username" placeholder="유저이름" autocomplete="username"
+                   minlength="1" maxlength="15" required="" id="id_username"
+                   value="{{ form.username.value|default_if_none:'' }}">
+            <div class="signup_info">
+                <span>*영어,한글,숫자,밑줄만 사용가능</span>
+            </div>
+            <div class="error">
+                {% if form.username.errors %}
+                <ul>
+                    {% for error in form.username.errors %}
+                    <li>
+                        <span> {{ error }} </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <input class="input_item" type="password" name="password1" placeholder="비밀번호" autocomplete="new-password"
+                   required="" id="id_password1" value="{{ form.password1.value|default_if_none:'' }}">
+            <div class="error">
+                {% if form.password1.errors %}
+                <ul>
+                    {% for error in form.password1.errors %}
+                    <li>
+                        <span> {{ error }} </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <input class="input_item" type="password" name="password2" placeholder="비밀번호 (확인)"
+                   autocomplete="new-password" required="" id="id_password2"
+                   value="{{ form.password2.value|default_if_none:'' }}">
+            <div class="signup_info">
+                <span>*최소8자리,숫자,특수문자 포함</span>
+            </div>
+
+            <div class="error">
+                {% if form.password2.errors %}
+                <ul>
+                    {% for error in form.password2.errors %}
+                    <li>
+                        <span> {{ error }} </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            {{ form.captcha }}
+            <div class="error">
+                {% if form.captcha.errors %}
+                <ul>
+                    {% for error in form.captcha.errors %}
+                    <li>
+                        <span> {{ error }} </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="agreement">
+                계정을 설정하고 회원가입을 진행하면 <br><a href="{% url 'resell:user_agreement' %}" target="_blank" style="color:blue;">이용약관</a>및
+                <a href="{% url 'resell:privacy_policy' %}" target="_blank" style="color:blue;">개인정보처리방침</a>에
+                <br>동의하게 됩니다.
+            </div>
+            <div class="error">
+                {% if form.non_field_errors %}
+                <ul>
+                    {% for error in form.non_field_errors %}
+                    <li>
+                        <span> {{ error }} </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <button class="primaryAction" type="submit">{% trans "Sign Up" %} &raquo;</button>
+
+        </div>
+    </form>
+</div>
+{% endblock %}

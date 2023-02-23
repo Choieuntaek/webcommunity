@@ -1,0 +1,7 @@
+User-agent: Yeti
+Disallow: /accounts/
+Disallow: /policies/
+
+User-agent: Googlebot
+Disallow: /accounts/
+Disallow: /policies/

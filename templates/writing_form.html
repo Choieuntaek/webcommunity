@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'mobile_writing_form.css' %}">
+    <title>{{ category.description }} 글 쓰기</title>
+</head>
+
+<div class="writing_form">
+
+    <div class="post_category">
+        <a href="{% url 'resell:writing_list' category.title %}">< {{category.description }}</a>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="input_box">
+            <input class="subject_box" type="text" name="subject" value="{{ form.subject.value|default_if_none:'' }}"
+                   placeholder="제목을 입력해주세요">
+        </div>
+        <div class="error">
+            {% if form.subject.errors %}
+            <ul>
+                {% for error in form.subject.errors %}
+                <li>
+                    <span> {{ error }} </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div>
+            {{ form.content }}
+        </div>
+        {{ form.captcha }}
+        <div class="error">
+            {% if form.captcha.errors %}
+            <ul>
+                {% for error in form.captcha.errors %}
+                <li>
+                    <span> {{ error }} </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <input class="rb" type="submit" onclick="window.onbeforeunload = null;" value="저장">
+
+    </form>
+</div>
+
+
+{% endblock %}
+{% block script %}
+<script>
+    window.onbeforeunload = function(){
+      return "글을 저장하지 않았습니다. 정말로 나가시겠습니까?";
+    }
+
+
+</script>
+{% endblock%}

@@ -1,0 +1,108 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load static %}
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'mobile_login.css'%}">
+
+<div class="main_page">
+    <a href="{% url 'resell:main' %}">홈으로</a>
+</div>
+
+<div class="login_inner">
+    <div class="title">
+        <h1>{% trans "Sign In" %}</h1>
+    </div>
+
+    <div class="login_form">
+        <form class="login" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+
+            <div class="input_box">
+                <input class="input_item" type="email" name="login" placeholder="이메일 주소" autocomplete="email"
+                       required="" id="id_login" value="{{ form.login.value|default_if_none:'' }}">
+                <div class="error">
+                    {% if form.login.errors %}
+                    <ul>
+                        {% for error in form.login.errors %}
+                        <li>
+                            <span> {{ error }} </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <input class="input_item" type="password" name="password" placeholder="비밀번호"
+                       autocomplete="current-password" required="" id="id_password">
+                <div class="error">
+                    {% if form.non_field_errors %}
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                        <li>
+                            <span> {{ error }} </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <input type="hidden" name="next" value="{{ next }}">  <!-- 로그인 성공후 이동되는 URL -->
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
+
+                <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+            </div>
+        </form>
+        <div class="login_etc">
+            <a href="{{ signup_url }}">회원가입</a>
+            <a class="button secondaryAction" href="{% url 'account_reset_password' %}">비밀번호 찾기</a>
+        </div>
+
+    </div>
+
+    <div class="social_login_tit">
+        <p class="tit">  소셜 계정으로 간편 로그인  </p>
+    </div>
+
+    <div class="social_login">
+        {% get_providers as socialaccount_providers %}
+
+        {% if socialaccount_providers %}
+
+
+        <div class="socialaccount_ballot">
+            <ul class="socialaccount_providers">
+                <li>
+                    <a title="Kakao" class="socialaccount_provider kakao" href="/accounts/kakao/login/?process=login">
+                        <span class="wrap_icon">
+							<img src="/static/kakao.png">
+							<span>카카오 로그인</span>
+						</span>
+                    </a>
+                </li>
+                <!--<li>
+                    <a title="Naver" class="socialaccount_provider naver" href="/accounts/naver/login/?process=login">Naver</a>
+                </li> -->
+                <li>
+                    <a title="Google" class="socialaccount_provider google"
+                       href="/accounts/google/login/?process=login">
+                       <span class="wrap_icon">
+							<img src="/static/g-logo.png">
+							<span>Google 로그인</span>
+                       </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        {% include "socialaccount/snippets/login_extra.html" %}
+
+        {% else %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

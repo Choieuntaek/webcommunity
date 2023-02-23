@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'mobile_profile.css' %}">
+
+{% include 'profile_base.html' %}
+
+<ul class="article_box">
+    {% if writings %}
+    {% for contents in writings %}
+    <li class="article">
+        <div class="contents_name">
+            <a href="{% url 'resell:writing_detail' contents.id %}">{{ contents.subject }}</a>
+        </div>
+        <div class="contents_info">
+            <div>
+                <span style="color:black;">{{contents.author}}</span>
+                <span> | {{ contents.create_date|date:"y.m.d H:i" }}</span>
+            </div>
+
+        </div>
+    </li>
+    {% endfor %}
+    {% else %}
+    <span>글이 없습니다.</span>
+    {% endif %}
+</ul>
+
+{% endblock %}

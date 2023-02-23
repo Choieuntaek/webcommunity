@@ -1,0 +1,157 @@
+.login_url{
+    color: rgba(0 0 188);
+}
+
+.main_page{
+    display:flex;
+    justify-content: center;
+    margin-top:50px;
+}
+
+.main_page a {
+    color: blue;
+}
+
+.login_inner{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login_form{
+    width:264px;
+}
+
+.input_box{
+    display:flex;
+    flex-direction: column;
+    background-color: #fff;
+    flex-grow:1;
+}
+
+.input_item{
+    border: solid 1px #e6e6ea;
+    border-radius: 6px;
+    height: 50px;
+    margin-bottom:5px;
+    width: 250px;
+    padding-left:10px;
+    font-size:16px;
+}
+
+.error ul{
+    margin:0 5px;
+    color: red;
+    font-size: 13px;
+}
+
+.primaryAction{
+    height: 50px;
+    font-size:16px;
+    border:none;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    background-color: rgba(0 0 188);
+    color: white;
+}
+
+.login_etc{
+    display:flex;
+    justify-content: space-between;
+}
+
+.login_etc a {
+    color: black;
+    font-weight: 600;
+}
+
+.signup_info{
+    margin-bottom:4px;
+}
+
+.signup_info span{
+    color: #9f9d9d;
+    font-size: 13px;
+}
+
+.socialaccount_ballot{
+    width:264px;
+}
+
+.socialaccount_providers{
+    margin: 0 0;
+}
+
+.social_login_tit .tit {
+    text-align: center;
+    font-size: 15px;
+    color: #5c667b;
+    line-height: 24px;
+    letter-spacing: -1px;
+    margin: 20px 0;
+}
+
+.social_login_tit .tit:before, .social_login_tit .tit:after {
+    width: 60px;
+    height: 1px;
+    background-color: #eaedf4;
+    display: inline-block;
+    vertical-align: super;
+    content: '';
+}
+
+.social_login_tit .tit:before {
+    margin-right: 8px;
+}
+
+.social_login_tit .tit:after {
+    margin-left: 8px;
+}
+
+
+
+.agreement{
+    text-align: center;
+}
+
+.google .wrap_icon{
+    display: flex;
+    flex-flow: row wrap;
+    width: 264px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #96a0b5;
+    align-content: center;
+    box-sizing: border-box;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.kakao .wrap_icon{
+    background-color: #fee500;
+    border-color: #fee500;
+    display: flex;
+    flex-flow: row wrap;
+    width: 264px;
+    height: 50px;
+    border-radius: 10px;
+    align-content: center;
+    box-sizing: border-box;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+
+.wrap_icon img {
+    width:30px;
+}
+
+.wrap_icon span{
+    color: rgba(0, 0, 0, 0.85);
+    display:flex;
+    flex-grow:1;
+    justify-content: center;
+    padding-right: 10px;
+}

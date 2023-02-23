@@ -1,0 +1,96 @@
+{% extends "socialaccount/base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<div class="login_inner">
+    <div class="main_page">
+        <a href="{% url 'resell:main' %}">홈으로</a>
+    </div>
+
+    <div class="login_inner">
+        <div class="title">
+            <h1>회원가입</h1>
+        </div>
+
+        <p>{% blocktrans with provider_name=account.get_provider.name %}
+            {{provider_name}}계정을 이용하여 로그인 합니다. <br>유저이름을 입력하면 가입이 완료됩니다.{% endblocktrans %}</p>
+        <link rel="stylesheet" type="text/css" href="{% static 'mobile_login.css'%}">
+        <div class="login_form">
+            <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+                {% csrf_token %}
+                <div class="input_box">
+                    <input class="input_item" type="email" name="email"
+                           value="{{ form.email.value|default_if_none:'' }}"
+                           placeholder="이메일 주소"
+                           autocomplete="email" required="" id="id_email" readonly>
+                    <div class="error">
+                        {% if form.email.errors %}
+                        <ul>
+                            {% for error in form.email.errors %}
+                            <li>
+                                <span> {{ error }} </span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <input class="input_item" type="text" name="username" placeholder="유저이름" autocomplete="username"
+                           minlength="1" maxlength="15"
+                           required="" id="id_username" value="{{ form.username.value|default_if_none:'' }}">
+                    <div class="error">
+                        {% if form.username.errors %}
+                        <ul>
+                            {% for error in form.username.errors %}
+                            <li>
+                                <span> {{ error }} </span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div class="signup_info">
+                        <span>*영어,한글,숫자,밑줄만 사용가능</span>
+                    </div>
+                    {{ form.captcha }}
+                    <div class="error">
+                        {% if form.captcha.errors %}
+                        <ul>
+                            {% for error in form.captcha.errors %}
+                            <li>
+                                <span> {{ error }} </span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <div class="agreement">
+                        계정을 설정하고 회원가입을 진행하면 <br><a href="{% url 'resell:user_agreement' %}" target="_blank"
+                                                   style="color:blue;">이용약관</a>및
+                        <a href="{% url 'resell:privacy_policy' %}" target="_blank" style="color:blue;">개인정보처리방침</a>에
+                        <br>동의하게 됩니다.
+                    </div>
+                    <div class="error">
+                        {% if form.non_field_errors %}
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                            <li>
+                                <span> {{ error }} </span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <button class="primaryAction" type="submit">{% trans "Sign Up" %} &raquo;</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

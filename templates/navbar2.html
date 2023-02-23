@@ -1,0 +1,41 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'mobile_nav2.css' %}">
+<nav class="nav2">
+    <div class="nav2-list">
+        <div class="menu">
+            <a href="{% url 'resell:main' %}">홈</a>
+        </div>
+        <div class="menu">
+            <a href="{% url 'resell:writing_list' 'notice' %}">공지사항</a>
+        </div>
+        <div class="menu">
+            <a href="{% url 'resell:writing_list' 'release2' %}">정보</a>
+        </div>
+        <div class="menu">
+            <a href="{% url 'resell:writing_list' 'release' %}">기습</a>
+        </div>
+        <div class="menu">
+            <a href="{% url 'resell:writing_list' 'free' %}">자유게시판</a>
+        </div>
+
+    </div>
+
+</nav>
+
+<script>
+
+    const currentUrl = new URL(window.location.href);
+    const specificDiv = document.querySelector('.nav2');
+    const links = specificDiv.querySelectorAll('a');
+    for (let i = 0; i < links.length; i++) {
+      const linkUrl = new URL(links[i].href);
+      if (linkUrl.pathname === currentUrl.pathname) {
+        links[i].classList.add('active');
+        break;
+      }
+    }
+
+
+
+</script>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'mobile_profile_update.css' %}">
+<div class="update_inner">
+    <div class="title">
+        <h3>유저이름 수정</h3>
+    </div>
+    <div class="update_box">
+        <form action="{% url 'resell:profile_update' %}" method="post">
+            {% csrf_token %}
+            <div class="input_box">
+                <input class="input_item" type="text" name="username"
+                       value="{{ form.username.value|default_if_none:'' }}">
+                <div class="signup_info">
+                    <span>*영어,한글,숫자,밑줄만 사용가능</span>
+                </div>
+                <div class="error">
+                    {% if form.username.errors %}
+                    <ul>
+                        {% for error in form.username.errors %}
+                        <li>
+                            <span> {{ error }} </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <input class="reset_b" type="submit" value="유저이름수정">
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

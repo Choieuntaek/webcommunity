@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<head>
+    <title>커뮤니티</title>
+    <meta name="description" content="커뮤니티">
+    <link rel="stylesheet" type="text/css" href="{% static 'mobile_main.css' %}">
+</head>
+
+<div class="notice">
+    <div class="notice_left">
+        <span>공지</span>
+    </div>
+    <ul class="notice_list">
+        {% for notice in writing_notice|slice:"0:2" %}
+        <li class="notice_a">
+            <a href="{% url 'resell:writing_detail' notice.id %}"> {{ notice.subject }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="hot_post">
+    <div class="post">
+        <div class="hot_title">
+            <h3>오늘 인기글</h3>
+        </div>
+        <ul class="hot_list_box">
+            {% for day in writing_list_day|slice:"0:10" %}
+            <li class="hot_list">
+                <a href="{% url 'resell:writing_detail' day.id %}">{{ day.subject }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</div>
+<div class="hot_post">
+    <div class="post">
+        <div class="hot_title">
+            <h3>이번주 인기글</h3>
+        </div>
+        <ul class="hot_list_box">
+            {% for day in writing_list_week|slice:"0:10" %}
+            <li class="hot_list">
+                <a href="{% url 'resell:writing_detail' day.id %}">{{ day.subject }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</div>
+<div class="hot_post">
+    <div class="post">
+        <div class="hot_title">
+            <h3>이번달 인기글</h3>
+        </div>
+        <ul class="hot_list_box">
+            {% for day in writing_list_month|slice:"0:10" %}
+            <li class="hot_list">
+                <a href="{% url 'resell:writing_detail' day.id %}">{{ day.subject }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

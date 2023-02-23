@@ -1,0 +1,50 @@
+
+<head>
+    {% load webpush_notifications %}
+    {% webpush_header %}
+</head>
+{% if user.is_authenticated %}
+    <div class="my_account">
+        <div class="nickname_box">
+            <div class="nickname">
+                {{ request.user.username }}
+            </div>
+            <div class="nickname_modify">
+                <a href="{% url 'resell:profile_update' %}">유저이름수정</a>
+            </div>
+        </div>
+        <div class="email">{{ request.user.email }}</div>
+        <div class="account_settings">
+            <a href="{% url 'account_change_password' %}">비밀번호변경</a>
+            <a href="{% url 'resell:profile_delete' %}">회원탈퇴</a>
+        </div>
+        <div class="webpush">
+            {% webpush_button with_class="btn" %}
+        </div>
+
+    </div>
+
+    <div class="header_tap">
+        <ul class="my_list">
+            <li>
+                <a href="/profile/">작성글</a>
+            </li>
+            <li>
+                <a href="/profile/mcomment/">댓글단 글</a>
+            </li>
+        </ul>
+
+    </div>
+{% endif %}
+<script>
+    const pcurrentUrl = window.location.href;
+    const aTag = document.querySelector('.my_list');
+    const plinks = aTag.querySelectorAll('a')
+    for(let i = 0; i < plinks.length; i++){
+        if(plinks[i].href === pcurrentUrl){
+            plinks[i].classList.add('active');
+            break;
+        }
+    }
+
+</script>

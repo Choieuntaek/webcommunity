@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'mobile_profile_update.css' %}">
+
+<div class="update_inner">
+    <div class="title">
+        <h3>회원탈퇴</h3>
+    </div>
+    <p>회원님의 계정이 삭제됩니다.<br>탈퇴시 개인정보 및 이용정보가 삭제되며 <br>복구할 수 없습니다. <br>본인의 비밀번호를 입력한 후 <br>하단의 유의사항 동의에 체크하세요. <br>소셜로그인
+        사용자는 비밀번호 변경에서 <br>비밀번호 설정 후 진행바랍니다.</p>
+
+    <div class="update_box">
+        <form action="{% url 'resell:profile_delete' %}" method="post">
+            {% csrf_token %}
+            <div class="input_box">
+
+                <input class="input_item" type="password" name="password" placeholder="비밀번호 입력">
+                <div class="error">
+                    {% if form.password.errors %}
+                    <ul>
+                        {% for error in form.password.errors %}
+                        <li>
+                            <span> {{ error }} </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="check">
+                    <input style="zoom:1.2;" type="checkbox" id="check" class="checkbox">
+
+                    <span>유의사항 동의체크</span>
+                </div>
+                <input class="reset_b" type="submit" id="submit" disabled="true" value="탈퇴하기">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+
+    const checkBox = document.getElementById("check");
+    const submit = document.getElementById("submit");
+    checkBox.addEventListener('click', function() {
+        submit.disabled = !checkBox.checked;
+    });
+
+
+
+
+
+</script>
+
+{% endblock %}

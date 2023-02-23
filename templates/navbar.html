@@ -1,0 +1,19 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'mobile_nav.css' %}">
+
+<nav class="top">
+    <div class="left_logo">
+        <a href="{% url 'resell:main'%}"><img class="logo" src="/static/logo2.png"></a>
+    </div>
+    <div class="right_info">
+        {% if user.is_authenticated %}
+            <a href="{% url 'resell:profile' %}">프로필</a>
+            <a href="{% url 'account_logout' %}?next={{ request.path }}">로그아웃</a>
+        {% else %}
+            <a href="/accounts/login">로그인</a>
+            <a href="{% url 'account_signup' %}">회원가입</a>
+        {% endif %}
+    </div>
+
+</nav>

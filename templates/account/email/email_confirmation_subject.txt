@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+이메일 인증을 해주세요.
+{% endautoescape %}

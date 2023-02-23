@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'mobile_writing_detail.css' %}">
+    <title>{{writing.subject}}</title>
+    <meta name="description" content="{{writing.subject}} 에 관한 내용입니다.">
+</head>
+
+<div class="post_title">
+    <div class="post_category">
+        <a {% if writing %} href="{% url 'resell:writing_list' writing.category.title %}" {% else %}
+           href="{% url 'resell:writing_list' comment.writing.category.title %}" {% endif %}><
+            {{writing.category.description }}</a>
+    </div>
+
+    <h2 class="subject">
+        {{ writing.subject }}
+    </h2>
+    <div class="post_info_etc">
+        {% if writing.author %}
+            <span style="color:black; font-size:15px; margin-right:0px;">{{writing.author}}</span>
+        {% else %}
+            <span style="color:black;">익명</span>
+        {% endif %}
+        <span>| {{ writing.create_date|date:"y.m.d H:i" }}</span>
+        <span>조회수{{ writing.view }}</span>
+        <span>댓글{{ writing.comment_set.count }}</span>
+        {% if request.user == writing.author %}
+        <a href="{% url 'resell:writing_modify' writing.id %}">수정</a>
+        <a href="javascript:void(0)" class="delete" data-uri="{% url 'resell:writing_delete' writing.id %}">삭제</a>
+        {% endif %}
+    </div>
+</div>
+<div>
+    <div class="post_content">
+        {{ writing.content|safe }}
+    </div>
+    <div class="link_copy">
+        <button id="copy-button">링크 복사</button>
+    </div>
+</div>
+
+<div class="post_comment">
+    <div class="comment_count">
+        <h3>댓글{{ writing.comment_set.count }}</h3>
+    </div>
+    <form class="comment_form" action="{% url 'resell:comment_create' writing.id %}" method="post">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+        <textarea id="textarea1" class="textarea_c" name="content" rows="15"></textarea>
+        <div class="error">
+            {% if form.content.errors %}
+            <ul>
+                {% for error in form.content.errors %}
+                <li>
+                    <span> {{ error }} </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <input type="hidden" name="level" value="0">
+        <input id="submitBtn1" class="register_button rb" type="submit" value="댓글등록" disabled>
+        {% else %}
+        <div class="comment_input">
+            <a class="comment_notlogin" href="{% url 'account_login' %}?next={{ request.path }}">댓글을 입력해주세요</a>
+            <!-- 현재 페이지로 리다이렉트 -->
+        </div>
+        {% endif %}
+    </form>
+
+    <div class="comment">
+        {% for comment in comment %}
+            {% if comment.deleted %}
+                {% if comment.level == 0 %}
+                <div class="comment_box1">삭제된 댓글입니다.</div>
+                {% else %}
+                <div class="comment_box2">ㄴ삭제된 댓글입니다.</div>
+                {% endif %}
+            {% else %}
+                {% if comment.level == 0 %}
+                <div class="comment_0"></div>
+                {% elif comment.level == 1 %}
+                <div class="comment_1">
+
+                </div>
+                {% endif %}
+            <div {% if comment.level == 0 %}class="comment_box1" {% else %} class="comment_box2" {% endif %}>
+                <div class="comment_info">
+                    <div class="comment_author">
+                        <span style="color:black; font-size:15px;" >{% if comment.level == 1%} {% if comment.author %}ㄴ{{comment.author}} {%else%}ㄴ익명{%endif%}{% else %} {% if comment.author %} {{comment.author}} {% else %}익명{%endif%}{% endif %}</span><span> | {{ comment.create_date|date:"y.m.d H:i" }}</span>
+                    </div>
+
+                    <div class="comment_settings">
+                        {% if request.user == comment.author %}
+                        <a href="#" class="edit-button" data-comment-id="{{ comment.id }}">수정</a>
+                        <a href="javascript:void(0)" class="delete" data-uri="{% url 'resell:comment_delete' comment.id %}">삭제</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div {% if comment.level == 0 %}class="comment_content0" {% else %} class="comment_content1" {% endif%}>
+                    <div class="content">
+                        {{ comment.content }}
+                    </div>
+                    <div>
+                        {% if comment.level == 0 %}
+                            {% if user.is_authenticated %}
+                            <a href="#" class="reply-button bs" data-reply-id="{{ comment.reply_id }}">답글쓰기</a>
+                            {% else %}
+                            <a href="{% url 'account_login' %}?next={{ request.path }}" class="bs">답글쓰기</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="comment-form">
+                <form action="{% url 'resell:comment_modify' comment.id %}" method="post" id="comment-form-{{ comment.id }}"
+                      style="display:none;">
+                    {% csrf_token %}
+                    <input type="hidden" name="level" value="{{ comment.level }}">
+                    <textarea class="textarea_2" name="content" id="textarea2" rows="15">{{ comment_form.content.value|default_if_none:'' }}</textarea>
+                    <div class="error">
+                        {% if comment_form.content.errors %}
+                        <ul>
+                            {% for error in comment_form.content.errors %}
+                            <li>
+                                <span> {{ error }} </span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <input class="register_button_2 rb" type="submit" id="submitBtn2" value="댓글수정" disabled>
+                    <!--<a href="#" class="cancel-button" data-comment-id="{{ comment.id }}">취소</a>-->
+                </form>
+
+            </div>
+            <div class="comment-reply-form">
+                <form action="{% url 'resell:comment_create' writing.id %}" method="post"
+                      id="reply-form-{{ comment.reply_id }}" style="display:none;">
+                    {% csrf_token %}
+                    <textarea id="textarea3" class="textarea_3" name="content" rows="15"></textarea>
+                    <div class="error">
+                        {% if form.content.errors %}
+                        <ul>
+                            {% for error in form.content.errors %}
+                            <li>
+                                <span> {{ error }} </span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <input type="hidden" name="level" value="1">
+                    <input type="hidden" name="reply_id" value="{{ comment.id }}">
+                    <input id="submitBtn3" class="register_button_3 rb" type="submit" value="답글등록" disabled>
+                </form>
+            </div>
+
+            {% endif%}
+
+        {% endfor %}
+    </div>
+</div>
+
+<div class="category_post">
+
+
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if(confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+
+
+</script>
+
+<script type="text/javascript">
+    function showCommentForm(commentId) {
+    // 입력 폼을 보여줍니다.
+    document.getElementById(`comment-form-${commentId}`).style.display = 'block';
+    }
+
+    // 댓글 수정 링크를 클릭했을 때 showCommentForm 함수를 호출합니다.
+    const editButtons = document.querySelectorAll('.edit-button');
+    editButtons.forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const commentId = this.dataset.commentId;
+      showCommentForm(commentId);
+    });
+    });
+
+    function hideCommentForm(commentId) {
+    // 입력 폼을 숨깁니다.
+    document.getElementById(`comment-form-${commentId}`).style.display = 'none';
+    }
+
+    // 취소 링크를 클릭했을 때 hideCommentForm 함수를 호출합니다.
+    const cancelButtons = document.querySelectorAll('.cancel-button');
+    cancelButtons.forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const commentId = this.dataset.commentId;
+      hideCommentForm(commentId);
+    });
+    });
+
+    //답글
+    function showReplyForm(replyId) {
+    // 입력 폼을 보여줍니다.
+    document.getElementById(`reply-form-${replyId}`).style.display = 'block';
+    }
+
+    // 답글쓰기 링크를 클릭했을 때 showCommentForm 함수를 호출합니다.
+    const replyButtons = document.querySelectorAll('.reply-button');
+    replyButtons.forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const replyId = this.dataset.replyId;
+      showReplyForm(replyId);
+    });
+    });
+
+    const textarea1 = document.querySelector('#textarea1');
+    const textareas2 = document.querySelectorAll('.textarea_2');
+    const textareas3 = document.querySelectorAll('.textarea_3');
+
+    const submitBtn1 = document.querySelector('#submitBtn1');
+    const submitBtns2 = document.querySelectorAll('.register_button_2');
+    const submitBtns3 = document.querySelectorAll('.register_button_3');
+
+    textarea1.addEventListener('input', function() {
+      if (textarea1.value !== '') {
+        submitBtn1.disabled = false;
+      } else {
+        submitBtn1.disabled = true;
+      }
+    });
+
+    textareas2.forEach((textarea, index) => {
+        textarea.addEventListener('input', function() {
+            if (textarea.value !== '') {
+                submitBtns2[index].disabled = false;
+            } else {
+                submitBtns2[index].disabled = true;
+            }
+        });
+    });
+
+    textareas3.forEach((textarea, index) => {
+        textarea.addEventListener('input', function() {
+            if (textarea.value !== '') {
+                submitBtns3[index].disabled = false;
+            } else {
+                submitBtns3[index].disabled = true;
+            }
+        });
+    });
+
+    let copyButton = document.getElementById("copy-button");
+    copyButton.addEventListener("click", function() {
+      let currentURL = window.location.href;
+      navigator.clipboard.writeText(currentURL).then(function() {
+        alert("링크가 복사되었습니다.");
+      }, function(err) {
+        console.error("링크 복사 실패: ", err);
+      });
+    });
+
+</script>
+
+
+{% endblock %}
